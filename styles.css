@@ -243,6 +243,37 @@ th, td{
     height: 100%;
     background-color: #15151589;
 }
+.col3-d1{
+    width: 100%;
+    height: calc(100%/3);
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.col3-d1 p, .col3-d1 .data{
+    display: flex;
+    /* align-items: center; */
+    width: 50%;
+    color: #EEF5FF;
+    margin: 0;
+    padding: 10px;
+}
+.col3-d1 .data, .col3-d1 .data p{
+    justify-content: right;
+    align-items: end;
+    font-size: 2rem;
+    font-weight: 600;
+    padding: 0px;
+}
+.col3-d1 .data span{
+    font-size: 1rem;
+    font-weight: 300;
+    margin-bottom: .4rem;
+    margin-left: .4rem;
+    padding-right: 10px;
+}
+
 @media (max-width: 767px) {
     .main{
         width: 100vw;

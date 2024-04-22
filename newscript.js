@@ -62,6 +62,9 @@ try {
     document.getElementById("Sunset").innerHTML = `${dayOneForecast.astro.sunset}`;
     document.getElementById("weather-text").innerHTML = `${result.current.condition.text}`;
     document.getElementById("last_update").innerHTML = `${utcDate(result.current.last_updated_epoch) + " " + utcTime(result.current.last_updated_epoch)}`;
+    document.getElementById("feels_like").innerHTML = `${result.current.feelslike_c}`;
+    document.getElementById("humidity").innerHTML = `${result.current.humidity}`;
+    document.getElementById("visibility").innerHTML = `${result.current.vis_km}`;
 
 } catch (error) {
 	console.error(error);
@@ -97,6 +100,7 @@ function formatDateTime(date) {
 function updateDateTime() {
     const currentDate = new Date();
     const formattedDateTime = formatDateTime(currentDate);
+    
   
     document.getElementById("currentDateTime").textContent = formattedDateTime;
 }
