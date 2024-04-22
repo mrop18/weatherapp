@@ -21,6 +21,7 @@ function utcDate(unixtime) {
     return `${day} ${month} ${year}`;
 }
 
+
 async function fetchWeather(city) {
     const url = `https://weatherapi-com.p.rapidapi.com/forecast.json?q=${city ? city : "Jaipur"}&days=3`;
     const options = {
@@ -45,6 +46,13 @@ try {
 	console.log(dayTwoForecast);
 	console.log(dayThreeForecast);
 
+    const forecastTwo = dayTwoForecast.date_epoch
+    const forecastThree = dayThreeForecast.date_epoch
+    // const datefrom = new Date(forecastOne*1000)
+    const dayTwo = new Date(forecastTwo*1000).getDate();
+    const dayThree = new Date(forecastThree*1000).getDate();
+    const month = new Date(forecastThree*1000).toLocaleString('default', { month: 'short' });
+
     const weatherIconUrl = result.current.condition.icon;
     const weatherIconImg = document.querySelector(".col1-d1 img");
     // console.log(weatherIconUrl);
@@ -54,6 +62,14 @@ try {
     //   } else {
         // console.error("Weather icon image element not found.");
     //   }
+
+    const weatherIconAUrl = dayTwoForecast.day.condition.icon;
+    const weatherIconAImg = document.querySelector(".imgA img");
+    weatherIconAImg.src = weatherIconAUrl;
+
+    const weatherIconBUrl = dayThreeForecast.day.condition.icon;
+    const weatherIconBImg = document.querySelector(".imgB img");
+    weatherIconBImg.src = weatherIconBUrl;
 
     document.getElementById("Temp").innerHTML = `${result.current.temp_c}°C`;
     document.getElementById("Wind_speed").innerHTML = `${result.current.wind_kph}`;
@@ -65,6 +81,12 @@ try {
     document.getElementById("feels_like").innerHTML = `${result.current.feelslike_c}`;
     document.getElementById("humidity").innerHTML = `${result.current.humidity}`;
     document.getElementById("visibility").innerHTML = `${result.current.vis_km}`;
+    document.getElementById("dayTwo").innerHTML = `${dayTwo}`;
+    document.getElementById("dayThree").innerHTML = `${dayThree}`;
+    document.getElementById("monthA").innerHTML = `${month}`;
+    document.getElementById("monthB").innerHTML = `${month}`;
+    document.getElementById("w-textA").innerHTML = `${dayTwoForecast.day.condition.text}`;
+    document.getElementById("w-textB").innerHTML = `${dayThreeForecast.day.condition.text}`;
 
 } catch (error) {
 	console.error(error);
