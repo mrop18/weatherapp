@@ -17,11 +17,12 @@ function utcDate(unixtime) {
     const dateObject = new Date(milliseconds);
     const day = dateObject.getDate();
     const month = dateObject.toLocaleString('default', { month: 'short' });
-    return `${day} ${month}`;
+    const year = dateObject.getFullYear()
+    return `${day} ${month} ${year}`;
 }
 
 async function fetchWeather(city) {
-    const url = `https://weatherapi-com.p.rapidapi.com/forecast.json?q=${city}&days=3`;
+    const url = `https://weatherapi-com.p.rapidapi.com/forecast.json?q=${city ? city : "Jaipur"}&days=3`;
     const options = {
         method: 'GET',
         headers: {
@@ -59,6 +60,7 @@ try {
     document.getElementById("Uv_index").innerHTML = `${result.current.uv}`;
     document.getElementById("Sunrise").innerHTML = `${dayOneForecast.astro.sunrise}`;
     document.getElementById("Sunset").innerHTML = `${dayOneForecast.astro.sunset}`;
+    document.getElementById("weather-text").innerHTML = `${result.current.condition.text}`;
     document.getElementById("last_update").innerHTML = `${utcDate(result.current.last_updated_epoch) + " " + utcTime(result.current.last_updated_epoch)}`;
 
 } catch (error) {
@@ -66,6 +68,8 @@ try {
 }
 
 }
+fetchWeather();
+
 
 searchBtn.addEventListener("click", ()=>{
     fetchWeather(searchBox.value);
