@@ -87,6 +87,10 @@ try {
     document.getElementById("monthB").innerHTML = `${month}`;
     document.getElementById("w-textA").innerHTML = `${dayTwoForecast.day.condition.text}`;
     document.getElementById("w-textB").innerHTML = `${dayThreeForecast.day.condition.text}`;
+    document.getElementById("TempA").innerHTML = `${dayTwoForecast.day.maxtemp_c}`;
+    document.getElementById("TempB").innerHTML = `${dayThreeForecast.day.maxtemp_c}`;
+    document.getElementById("Moonrise").innerHTML = `${dayOneForecast.astro.moonrise}`;
+    document.getElementById("Moonset").innerHTML = `${dayOneForecast.astro.moonset}`;
 
 } catch (error) {
 	console.error(error);
