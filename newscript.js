@@ -55,10 +55,13 @@ try {
 
     const weatherIconUrl = result.current.condition.icon;
     const weatherIconImg = document.querySelector(".col1-d1 img");
+    const weatherIconBgImg = document.querySelector(".background img");
     // console.log(weatherIconUrl);
     // console.log(weatherIconImg);
     // if (weatherIconImg) {
         weatherIconImg.src = weatherIconUrl;
+        weatherIconBgImg.src = weatherIconUrl;
+
     //   } else {
         // console.error("Weather icon image element not found.");
     //   }
