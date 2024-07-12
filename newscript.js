@@ -94,9 +94,180 @@ try {
     document.getElementById("TempB").innerHTML = `${dayThreeForecast.day.maxtemp_c}`;
     document.getElementById("Moonrise").innerHTML = `${dayOneForecast.astro.moonrise}`;
     document.getElementById("Moonset").innerHTML = `${dayOneForecast.astro.moonset}`;
+    document.getElementById("Moonphase").innerHTML = `${dayOneForecast.astro.moon_phase}`;
 
+    const moonPhase = dayOneForecast.astro.moon_phase.toLowerCase();
+    updateMoonPhase(moonPhase);
+
+
+    const sunriseUnix = new Date(dayOneForecast.date + ' ' + dayOneForecast.astro.sunrise).getTime() / 1000;
+    const sunsetUnix = new Date(dayOneForecast.date + ' ' + dayOneForecast.astro.sunset).getTime() / 1000;
+    const currentUnix = Math.floor(new Date().getTime() / 1000);
+    const uvIndex= result.current.uv;
+    updateSunPosition(sunriseUnix, sunsetUnix, currentUnix, result.current.temp_c, result.current.uv);
+    updateUVBar(uvIndex);
+
+    const windSpeed = result.current.wind_kph;
+    const animationSpeed = windSpeed * 0.1;
+
+    animateCircles(animationSpeed);
+    
+            
 } catch (error) {
 	console.error(error);
+}
+
+function updateMoonPhase(phase) {
+    const moon = document.getElementById('moon');
+    const shade = document.getElementById('shade');
+    
+    // let boxShadow;
+    let moonColor;
+    let shadeColor;
+    let shadePosition;
+
+
+    switch (phase) {
+        case "new moon":
+            moonColor = "#000";
+            shadeColor = "#000";
+            shadePosition = { left: "0px"};
+            // boxShadow = "inset 100px 0 0 0 #000, 0 0 5px 0 #000";
+            break;
+        case "waxing crescent":
+            moonColor = "#fff";
+            shadeColor = "#000";
+            shadePosition = { left: "-20px"};
+            break;
+        case "first quarter":
+            moonColor = "#fff";
+            shadeColor = "#000";
+            shadePosition = { left: "-40px"};
+            break;
+        case "waxing gibbous":
+            moonColor = "#000";
+            shadeColor = "#fff";
+            shadePosition = { left: "20px"};
+            break;
+        case "full moon":
+            moonColor = "#fff";
+            shadeColor = "#fff";
+            shadePosition = { left: "0px"};
+            break;
+        case "waning gibbous":
+            moonColor = "#000";
+            shadeColor = "#fff";
+            shadePosition = { left: "-20px"};
+            break;
+        case "last quarter":
+            moonColor = "#000";
+            shadeColor = "#fff";
+            shadePosition = { left: "-40px"};
+            break;
+        case "waning crescent":
+            moonColor = "#fff";
+            shadeColor = "#000";
+            shadePosition = { left: "20px"};
+            break;
+        default:
+            moonColor = "#fff";
+            shadeColor = "#fff";
+            shadePosition = { left: "0px"};
+    }
+
+    // moon.style.boxShadow = boxShadow;
+    moon.style.backgroundColor = moonColor;
+    shade.style.backgroundColor = shadeColor;
+    shade.style.setProperty('left', shadePosition.left);
+}
+
+function updateSunPosition(sunriseUnix, sunsetUnix, currentUnix, temperature, uvIndex) {
+    const sun = document.getElementById("sun");
+
+    if (currentUnix < sunriseUnix || currentUnix > sunsetUnix) {
+        sun.style.display = "none";
+        return;
+    }
+
+    sun.style.display = "block";
+
+    const totalDayTime = sunsetUnix - sunriseUnix;
+    const elapsedTime = currentUnix - sunriseUnix;
+    const dayProgress = elapsedTime / totalDayTime;
+
+    const halfCircleWidth = document.querySelector(".half-circle").offsetWidth;
+    const sunXPosition = halfCircleWidth * dayProgress;
+    sun.style.left = `${sunXPosition}px`;
+
+    let sunColor;
+    if (temperature < 15) {
+        sunColor = "lightblue";
+    } else if (temperature < 25) {
+        sunColor = "yellow";
+    } else {
+        sunColor = "red";
+    }
+
+    if (uvIndex < 3) {
+        sunColor = "lightgreen";
+    } else if (uvIndex < 6) {
+        sunColor = "orange";
+    } else {
+        sunColor = "purple";
+    }
+
+    sun.style.backgroundColor = sunColor;
+}
+function updateUVBar(uvIndex) {
+    const uvFill = document.getElementById("uvFill");
+    const uvBar = document.querySelector(".uv-index-bar");
+    const maxUVIndex = 10;
+    const heightPercentage = (uvIndex / maxUVIndex) * 100;
+    uvFill.style.height = `${heightPercentage}%`;
+    console.log(uvIndex);
+    let fillColor;
+    if (uvIndex < 3) {
+        fillColor = "lightgreen";
+    } else if (uvIndex < 6) {
+        fillColor = "yellow";
+    } else if (uvIndex < 8) {
+        fillColor = "orange";
+    } else if (uvIndex < 11) {
+        fillColor = "red";
+    } else {
+        fillColor = "purple";
+    }
+
+    uvFill.style.backgroundColor = fillColor;
+    uvBar.style.boxShadow = `0px 0px 70px 5px ${fillColor}`;
+}
+
+function animateCircles(animationSpeed) {
+    const motionPath = document.getElementById('motionPath');
+    const movingCircle = document.getElementById('movingCircle');
+    const movingCircle2 = document.getElementById('movingCircle2');
+    const pathLength = motionPath.getTotalLength();
+    let direction = 1; 
+    let distance = 0;
+
+    function animateCircle(timestamp) {
+        requestAnimationFrame(animateCircle);
+
+        distance += direction * animationSpeed; 
+
+        if (distance < 0 || distance > pathLength) {
+            direction *= -1; 
+        }
+
+        let point = motionPath.getPointAtLength(distance);
+
+        movingCircle.setAttribute('cx', point.x);
+        movingCircle2.setAttribute('cx', point.x);
+        movingCircle.setAttribute('cy', point.y);
+        movingCircle2.setAttribute('cy', point.y);
+    }
+
+    animateCircle(); 
 }
 
 }
@@ -137,4 +308,9 @@ function updateDateTime() {
 updateDateTime();
 setInterval(updateDateTime, 1000);
 
+        
+
+
 });
+
+        
