@@ -102,7 +102,9 @@ try {
 
     const sunriseUnix = new Date(dayOneForecast.date + ' ' + dayOneForecast.astro.sunrise).getTime() / 1000;
     const sunsetUnix = new Date(dayOneForecast.date + ' ' + dayOneForecast.astro.sunset).getTime() / 1000;
+    // console.log(dayOneForecast.astro.sunset);
     const currentUnix = Math.floor(new Date().getTime() / 1000);
+    // const currentUnix = 1720854180;
     const uvIndex= result.current.uv;
     updateSunPosition(sunriseUnix, sunsetUnix, currentUnix, result.current.temp_c, result.current.uv);
     updateUVBar(uvIndex);
@@ -183,39 +185,60 @@ function updateMoonPhase(phase) {
 
 function updateSunPosition(sunriseUnix, sunsetUnix, currentUnix, temperature, uvIndex) {
     const sun = document.getElementById("sun");
-
-    if (currentUnix < sunriseUnix || currentUnix > sunsetUnix) {
-        sun.style.display = "none";
-        return;
-    }
+    const halfCircle = document.querySelector(".half-circle");
+    // if (currentUnix < sunriseUnix || currentUnix > sunsetUnix) {
+    //     sun.style.display = "none";
+    //     return;
+    // }
 
     sun.style.display = "block";
-
     const totalDayTime = sunsetUnix - sunriseUnix;
-    const elapsedTime = currentUnix - sunriseUnix;
-    const dayProgress = elapsedTime / totalDayTime;
+    const elapsedTime = currentUnix - sunsetUnix;
+    const dayProgress = -elapsedTime / totalDayTime;
+    const radius = halfCircle.offsetWidth / 2;
+    const centerX = radius;
+    const centerY = radius;
+    console.log(centerX);
 
-    const halfCircleWidth = document.querySelector(".half-circle").offsetWidth;
-    const sunXPosition = halfCircleWidth * dayProgress;
+    const angle = Math.PI * dayProgress;
+    console.log(dayProgress);
+    const sunXPosition = centerX + radius * Math.cos(angle) - sun.offsetWidth / 2;
+    const sunYPosition = centerY - radius * Math.sin(angle) - sun.offsetHeight / 2;
+
+
     sun.style.left = `${sunXPosition}px`;
+    sun.style.top = `${sunYPosition}px`;
 
+    // const halfCircleWidth = document.querySelector(".half-circle").offsetWidth;
+    // console.log(sunsetUnix);
+    // const sunXPosition = halfCircleWidth * dayProgress;
+    // sun.style.left = `${sunXPosition}px`;
+    let boxShadow;
     let sunColor;
     if (temperature < 15) {
         sunColor = "lightblue";
+        boxShadow = "0 0 80px 20px lightblue";
+
     } else if (temperature < 25) {
+        boxShadow = "0 0 80px 20px yellow";
         sunColor = "yellow";
     } else {
+        boxShadow = "0 0 80px 20px red";
         sunColor = "red";
     }
 
     if (uvIndex < 3) {
+        boxShadow = "0 0 80px 20px lightblue";
         sunColor = "lightgreen";
     } else if (uvIndex < 6) {
+        boxShadow = "0 0 80px 20px orange";
         sunColor = "orange";
     } else {
+        boxShadow = "0 0 80px 20px purple";
         sunColor = "purple";
     }
 
+    sun.style.boxShadow = boxShadow;
     sun.style.backgroundColor = sunColor;
 }
 function updateUVBar(uvIndex) {
