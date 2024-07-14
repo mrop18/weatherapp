@@ -35,16 +35,16 @@ async function fetchWeather(city) {
 try {
 	const response = await fetch(url, options);
 	const result = await response.json();
-	console.log(result);
-	console.log(result.current);
+	// console.log(result);
+	// console.log(result.current);
     const dayOneForecast = result.forecast.forecastday[0];
     const dayTwoForecast = result.forecast.forecastday[1];
     const dayThreeForecast = result.forecast.forecastday[2];
     // const dayOneSunrise = dayOneForecast.astro.sunrise;
     // const dayOneSunset = dayOneForecast.astro.sunset;
-	console.log(dayOneForecast);
-	console.log(dayTwoForecast);
-	console.log(dayThreeForecast);
+	// console.log(dayOneForecast);
+	// console.log(dayTwoForecast);
+	// console.log(dayThreeForecast);
 
     const forecastTwo = dayTwoForecast.date_epoch
     const forecastThree = dayThreeForecast.date_epoch
@@ -198,10 +198,10 @@ function updateSunPosition(sunriseUnix, sunsetUnix, currentUnix, temperature, uv
     const radius = halfCircle.offsetWidth / 2;
     const centerX = radius;
     const centerY = radius;
-    console.log(centerX);
+    // console.log(centerX);
 
     const angle = Math.PI * dayProgress;
-    console.log(dayProgress);
+    // console.log(dayProgress);
     const sunXPosition = centerX + radius * Math.cos(angle) - sun.offsetWidth / 2;
     const sunYPosition = centerY - radius * Math.sin(angle) - sun.offsetHeight / 2;
 
@@ -215,28 +215,32 @@ function updateSunPosition(sunriseUnix, sunsetUnix, currentUnix, temperature, uv
     // sun.style.left = `${sunXPosition}px`;
     let boxShadow;
     let sunColor;
-    if (temperature < 15) {
-        sunColor = "lightblue";
-        boxShadow = "0 0 80px 20px lightblue";
+    if (temperature < 5) {
+        sunColor = "#c7e1e5";
+        boxShadow = "0 0 80px 30px #c7e1e5";
 
-    } else if (temperature < 25) {
-        boxShadow = "0 0 80px 20px yellow";
-        sunColor = "yellow";
+    } else if (temperature < 15) {
+        boxShadow = "0 0 80px 30px #ffa700";
+        sunColor = "#ffa700";
+    } 
+    else if (temperature < 25) {
+        boxShadow = "0 0 80px 30px #ff6700";
+        sunColor = "#ffa700";
     } else {
-        boxShadow = "0 0 80px 20px red";
-        sunColor = "red";
+        boxShadow = "0 0 80px 30px #ff0000";
+        sunColor = "#ffa700";
     }
 
-    if (uvIndex < 3) {
-        boxShadow = "0 0 80px 20px lightblue";
-        sunColor = "lightgreen";
-    } else if (uvIndex < 6) {
-        boxShadow = "0 0 80px 20px orange";
-        sunColor = "orange";
-    } else {
-        boxShadow = "0 0 80px 20px purple";
-        sunColor = "purple";
-    }
+    // if (uvIndex < 3) {
+    //     boxShadow = "0 0 80px 20px lightblue";
+    //     sunColor = "lightgreen";
+    // } else if (uvIndex < 6) {
+    //     boxShadow = "0 0 80px 20px orange";
+    //     sunColor = "orange";
+    // } else {
+    //     boxShadow = "0 0 80px 20px purple";
+    //     sunColor = "purple";
+    // }
 
     sun.style.boxShadow = boxShadow;
     sun.style.backgroundColor = sunColor;
@@ -247,7 +251,7 @@ function updateUVBar(uvIndex) {
     const maxUVIndex = 10;
     const heightPercentage = (uvIndex / maxUVIndex) * 100;
     uvFill.style.height = `${heightPercentage}%`;
-    console.log(uvIndex);
+    // console.log(uvIndex);
     let fillColor;
     if (uvIndex < 3) {
         fillColor = "lightgreen";
